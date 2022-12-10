@@ -20,7 +20,7 @@ from settings import TRAINING_SETTINGS
 
 
 nltk_setup()
-MODEL_NAME = 'model_1'
+MODEL_NAME = 'model_2'
 training_setting = TRAINING_SETTINGS[MODEL_NAME]
 
 
@@ -95,10 +95,27 @@ conf_matrix = pd.DataFrame(
 plt.figure(figsize=(15, 15))
 sns.heatmap(conf_matrix, annot=True, annot_kws={"size": 15})
 
-sequence = tokenizer.texts_to_sequences(['pussy ass bitch nigga'])
-test = pad_sequences(sequence, maxlen=training_setting['max_length'])
-sentiment[np.where(best_model.predict(test) > 0.75, 1, 0)[0][0]]
 
-sequence = tokenizer.texts_to_sequences(['good job friend'])
-test = pad_sequences(sequence, maxlen=training_setting['max_length'])
-sentiment[np.where(best_model.predict(test) > 0.75, 1, 0)[0][0]]
+# Avaliation on tweet users
+def avaliate_tweet(tweet):
+    sequence = tokenizer.texts_to_sequences([tweet])
+    test = pad_sequences(sequence, maxlen=training_setting['max_length'])
+    return sentiment[np.where(best_model.predict(test) > 0.75, 1, 0)[0][0]]
+
+
+for (dirpath, dirnames, filenames) in os.walk('./data/tweet_accs'):
+    tweet_avaliation = {}
+    for filename in filenames:
+        data = pd.read_csv(f'./data/tweet_accs/{filename}')
+        df = pd.DataFrame(data, columns=['Tweet'])
+        df = df.dropna()
+        results = [
+            avaliate_tweet(tweet)
+            for tweet in df['Tweet'].to_list()
+        ]
+        tweet_avaliation[filename.split('.')[0]] = (
+            round(results.count('Offensive') / len(results), 4) * 100
+        )
+
+for key, value in tweet_avaliation.items():
+    print(f'User {key} has {value}% of his tweets considered offensive!\n')
