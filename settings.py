@@ -5,7 +5,6 @@ TRAINING_SETTINGS = {
     'model_1': {
         'name': 'model_1',
         'vocab_size': 10000,
-        'embedding_dim': 16,
         'max_length': 280,
         'epochs': 5,  # Less epochs for faster training
         'layers': [
@@ -17,7 +16,6 @@ TRAINING_SETTINGS = {
     'model_2': {
         'name': 'model_2',
         'vocab_size': 10000,
-        'embedding_dim': 16,
         'max_length': 280,
         'epochs': 5,
         'layers': [
@@ -31,7 +29,6 @@ TRAINING_SETTINGS = {
     'model_3': {
         'name': 'model_3',
         'vocab_size': 10000,
-        'embedding_dim': 16,
         'max_length': 280,
         'epochs': 5,
         'layers': [

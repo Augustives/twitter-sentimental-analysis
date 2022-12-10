@@ -20,7 +20,7 @@ from settings import TRAINING_SETTINGS
 
 
 nltk_setup()
-MODEL_NAME = 'model_2'
+MODEL_NAME = 'model_3'
 training_setting = TRAINING_SETTINGS[MODEL_NAME]
 
 
@@ -75,17 +75,16 @@ best_model = keras.models.load_model(
     f'./models/best_{training_setting["name"]}.hdf5'
 )
 test_loss, test_acc = best_model.evaluate(X_test, y_test, verbose=2)
-print('Model accuracy: ', test_acc)
 predictions = best_model.predict(X_test)
 predictions_binary = [
-    np.where(prediction > 0.75, 1, 0)
+    np.where(prediction > 0.75, 1, 0).max()
     for prediction in predictions
 ]
 
 sentiment = ['Non Offensive', 'Offensive']
 matrix = confusion_matrix(
     y_test,
-    predictions_binary
+    predictions_binary,
 )
 conf_matrix = pd.DataFrame(
     matrix,
@@ -93,7 +92,7 @@ conf_matrix = pd.DataFrame(
     columns=sentiment
 )
 plt.figure(figsize=(15, 15))
-sns.heatmap(conf_matrix, annot=True, annot_kws={"size": 15})
+sns.heatmap(conf_matrix, annot=True, annot_kws={"size": 15}, fmt='g')
 
 
 # Avaliation on tweet users
