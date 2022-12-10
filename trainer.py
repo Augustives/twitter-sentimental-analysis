@@ -2,6 +2,7 @@
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import seaborn as sns
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -19,7 +20,7 @@ from settings import TRAINING_SETTINGS
 
 
 nltk_setup()
-MODEL_NAME = 'model_2'
+MODEL_NAME = 'model_1'
 training_setting = TRAINING_SETTINGS[MODEL_NAME]
 
 
@@ -47,24 +48,26 @@ tweets = pad_sequences(sequences, maxlen=training_setting['max_length'])
 
 X_train, X_test, y_train, y_test = train_test_split(
     tweets, df['label'], random_state=0
-    )
+)
 
-model = tf.keras.Sequential(training_setting['layers'])
-model.compile(
-    loss='binary_crossentropy',
-    optimizer='adam',
-    metrics=['accuracy']
-)
-checkpoint = ModelCheckpoint(
-    f'./models/best_{training_setting["name"]}.hdf5',
-    monitor='val_accuracy',
-    verbose=1, save_best_only=True, mode='auto',
-    period=1, save_weights_only=False
-)
-history = model.fit(
-    X_train, y_train, epochs=training_setting['epochs'],
-    validation_data=(X_test, y_test), callbacks=[checkpoint]
-)
+if not os.path.exists(f'./models/best_{training_setting["name"]}.hdf5'):
+    print('Training in progress')
+    model = tf.keras.Sequential(training_setting['layers'])
+    model.compile(
+        loss='binary_crossentropy',
+        optimizer='adam',
+        metrics=['accuracy']
+    )
+    checkpoint = ModelCheckpoint(
+        f'./models/best_{training_setting["name"]}.hdf5',
+        monitor='val_accuracy',
+        verbose=1, save_best_only=True, mode='auto',
+        period=1, save_weights_only=False
+    )
+    history = model.fit(
+        X_train, y_train, epochs=training_setting['epochs'],
+        validation_data=(X_test, y_test), callbacks=[checkpoint]
+    )
 
 
 # Analyze model
