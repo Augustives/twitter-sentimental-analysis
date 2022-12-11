@@ -18,9 +18,9 @@ from utils import (
 )
 from settings import TRAINING_SETTINGS
 
-
+# Config
 nltk_setup()
-MODEL_NAME = 'model_3'
+MODEL_NAME = 'model_2'
 training_setting = TRAINING_SETTINGS[MODEL_NAME]
 
 
