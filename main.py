@@ -102,6 +102,9 @@ def avaliate_tweet(tweet):
     return sentiment[np.where(best_model.predict(test) > 0.75, 1, 0)[0][0]]
 
 
+avaliate_tweet("this bitch sucks")
+avaliate_tweet("good job mate")
+
 for (dirpath, dirnames, filenames) in os.walk('./data/tweet_accs'):
     tweet_avaliation = {}
     for filename in filenames:
